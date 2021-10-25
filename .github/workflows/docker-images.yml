@@ -9,6 +9,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+
       - name: docker login
         env:
           DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
@@ -17,15 +21,15 @@ jobs:
 
       - name: Build the Docker images
         env:
-          SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
-          docker build web --file web/Dockerfile --tag eyuelberga/peernotes-web:$(SOURCE_TAG +%s)
-          docker build web --file web/Dockerfile --build-arg "ENV=TEST" --tag eyuelberga/peernotes-web-test:$(SOURCE_TAG +%s)
-          docker build algolia-webhook --file algolia-webhook/Dockerfile --tag eyuelberga/peernotes-algolia-webhook:$(SOURCE_TAG +%s)
+          docker build web --file web/Dockerfile --tag eyuelberga/peernotes-web:$(RELEASE_VERSION +%s)
+          docker build web --file web/Dockerfile --build-arg "ENV=TEST" --tag eyuelberga/peernotes-web-test:$(RELEASE_VERSION +%s)
+          docker build algolia-webhook --file algolia-webhook/Dockerfile --tag eyuelberga/peernotes-algolia-webhook:$(RELEASE_VERSION +%s)
       - name: Push to docker hub
         env:
-          SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
-          docker push eyuelberga/peernotes-web:$(SOURCE_TAG +%s)
-          docker push eyuelberga/peernotes-web-test:$(SOURCE_TAG +%s)
-          docker push eyuelberga/peernotes-algolia-webhook:$(SOURCE_TAG +%s)
+          docker push eyuelberga/peernotes-web:$(RELEASE_VERSION +%s)
+          docker push eyuelberga/peernotes-web-test:$(RELEASE_VERSION +%s)
+          docker push eyuelberga/peernotes-algolia-webhook:$(RELEASE_VERSION +%s)
