@@ -17,9 +17,9 @@ jobs:
 
       - name: Build the Docker images
         run: |
-          docker build . --file web/Dockerfile --tag eyuelberga/peernotes-web:$(date +%s)
-          docker build . --file web/Dockerfile --build-arg "ENV=TEST" --tag eyuelberga/peernotes-web-test:$(date +%s)
-          docker build . --file algolia-webhook/Dockerfile --build-arg "ENV=TEST" --tag eyuelberga/peernotes-algolia-webhook:$(date +%s)
+          docker build web --file web/Dockerfile --tag eyuelberga/peernotes-web:$(date +%s)
+          docker build web --file web/Dockerfile --build-arg "ENV=TEST" --tag eyuelberga/peernotes-web-test:$(date +%s)
+          docker build algolia-webhook --file algolia-webhook/Dockerfile --build-arg "ENV=TEST" --tag eyuelberga/peernotes-algolia-webhook:$(date +%s)
       - name: Push to docker hub
         run: |
           docker push eyuelberga/peernotes-web

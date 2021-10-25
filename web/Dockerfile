@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN yarn install
+#RUN yarn install
 
 RUN chmod u+x build.sh && ./build.sh
 
@@ -17,7 +17,6 @@ COPY conf /etc/nginx
 
 # Static build
 COPY --from=builder /app/build /usr/share/nginx/html/
-#COPY  build /usr/share/nginx/html/
 
 # Default port exposure
 EXPOSE 80
