@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/eyuelberga/peernotes">
-    <img src="https://github.com/eyuelberga/peernotes/blob/main/assets/logo.png?raw=true" alt="Peer Notes logo" width="300" />
+    <img src="https://github.com/eyuelberga/peernotes/blob/main/assets/banner.png?raw=true" alt="Peer Notes banner" width="300" />
   </a>
 </p>
 
