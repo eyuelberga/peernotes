@@ -23,13 +23,13 @@ jobs:
         env:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
-          docker build web --file web/Dockerfile --tag eyuelberga/peernotes-web:$(RELEASE_VERSION +%s)
-          docker build web --file web/Dockerfile --build-arg "ENV=TEST" --tag eyuelberga/peernotes-web-test:$(RELEASE_VERSION +%s)
-          docker build algolia-webhook --file algolia-webhook/Dockerfile --tag eyuelberga/peernotes-algolia-webhook:$(RELEASE_VERSION +%s)
+          docker build web --file web/Dockerfile --tag eyuelberga/peernotes-web:$RELEASE_VERSION
+          docker build web --file web/Dockerfile --build-arg "ENV=TEST" --tag eyuelberga/peernotes-web-test:$RELEASE_VERSION
+          docker build algolia-webhook --file algolia-webhook/Dockerfile --tag eyuelberga/peernotes-algolia-webhook:$RELEASE_VERSION
       - name: Push to docker hub
         env:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
-          docker push eyuelberga/peernotes-web:$(RELEASE_VERSION +%s)
-          docker push eyuelberga/peernotes-web-test:$(RELEASE_VERSION +%s)
-          docker push eyuelberga/peernotes-algolia-webhook:$(RELEASE_VERSION +%s)
+          docker push eyuelberga/peernotes-web:$RELEASE_VERSION
+          docker push eyuelberga/peernotes-web-test:$RELEASE_VERSION
+          docker push eyuelberga/peernotes-algolia-webhook:$RELEASE_VERSION
