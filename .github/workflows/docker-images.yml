@@ -1,7 +1,7 @@
 name: Publish Docker Images
 on:
-  push:
-    branches: [main]
+  release:
+    types: [published]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,12 +16,16 @@ jobs:
         run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
       - name: Build the Docker images
+        env:
+          SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
         run: |
-          docker build web --file web/Dockerfile --tag eyuelberga/peernotes-web:$(date +%s)
-          docker build web --file web/Dockerfile --build-arg "ENV=TEST" --tag eyuelberga/peernotes-web-test:$(date +%s)
-          docker build algolia-webhook --file algolia-webhook/Dockerfile --build-arg "ENV=TEST" --tag eyuelberga/peernotes-algolia-webhook:$(date +%s)
+          docker build web --file web/Dockerfile --tag eyuelberga/peernotes-web:$(SOURCE_TAG +%s)
+          docker build web --file web/Dockerfile --build-arg "ENV=TEST" --tag eyuelberga/peernotes-web-test:$(SOURCE_TAG +%s)
+          docker build algolia-webhook --file algolia-webhook/Dockerfile --tag eyuelberga/peernotes-algolia-webhook:$(SOURCE_TAG +%s)
       - name: Push to docker hub
+        env:
+          SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
         run: |
-          docker push eyuelberga/peernotes-web
-          docker push eyuelberga/peernotes-web-test
-          docker push eyuelberga/peernotes-algolia-webhook
+          docker push eyuelberga/peernotes-web:$(SOURCE_TAG +%s)
+          docker push eyuelberga/peernotes-web-test:$(SOURCE_TAG +%s)
+          docker push eyuelberga/peernotes-algolia-webhook:$(SOURCE_TAG +%s)
