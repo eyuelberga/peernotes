@@ -6,7 +6,7 @@ COPY . .
 
 RUN cp .env.example .env
 
-#RUN yarn install
+RUN yarn install
 
 RUN chmod u+x build.sh && ./build.sh
 
