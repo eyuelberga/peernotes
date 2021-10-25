@@ -1,0 +1,5 @@
+mutation DELETE_NOTE($id: uuid!) {
+  note: delete_notes_by_pk(id: $id) {
+    id
+  }
+}

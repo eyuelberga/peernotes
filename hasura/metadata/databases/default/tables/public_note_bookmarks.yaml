@@ -1,0 +1,50 @@
+table:
+  name: note_bookmarks
+  schema: public
+object_relationships:
+- name: note
+  using:
+    foreign_key_constraint_on: note_id
+- name: user
+  using:
+    foreign_key_constraint_on: username
+insert_permissions:
+- permission:
+    backend_only: false
+    check:
+      user:
+        blocked:
+          _neq: true
+    columns:
+    - note_id
+    set:
+      username: x-hasura-Username
+  role: STUDENT
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - username
+    - note_id
+    - created_at
+    - updated_at
+    filter: {}
+    limit: 10
+  role: PLATFORM_MODERATOR
+- permission:
+    allow_aggregations: true
+    columns:
+    - username
+    - note_id
+    - created_at
+    - updated_at
+    filter:
+      username:
+        _eq: X-Hasura-Username
+  role: STUDENT
+delete_permissions:
+- permission:
+    filter:
+      username:
+        _eq: X-Hasura-Username
+  role: STUDENT

@@ -1,0 +1,6 @@
+mutation UNLIKE_NOTE($id: uuid!, $username: String!) {
+  delete_note_likes_by_pk(note_id: $id, username: $username) {
+    note_id
+    username
+  }
+}

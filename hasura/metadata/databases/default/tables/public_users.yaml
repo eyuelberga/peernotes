@@ -1,0 +1,111 @@
+table:
+  name: users
+  schema: public
+array_relationships:
+- name: note_bookmarks
+  using:
+    foreign_key_constraint_on:
+      column: username
+      table:
+        name: note_bookmarks
+        schema: public
+- name: note_likes
+  using:
+    foreign_key_constraint_on:
+      column: username
+      table:
+        name: note_likes
+        schema: public
+- name: note_reports
+  using:
+    foreign_key_constraint_on:
+      column: username
+      table:
+        name: note_reports
+        schema: public
+- name: note_views
+  using:
+    foreign_key_constraint_on:
+      column: username
+      table:
+        name: note_views
+        schema: public
+- name: notes
+  using:
+    foreign_key_constraint_on:
+      column: created_by
+      table:
+        name: notes
+        schema: public
+- name: notifications
+  using:
+    foreign_key_constraint_on:
+      column: to
+      table:
+        name: notifications
+        schema: public
+- name: subjects
+  using:
+    foreign_key_constraint_on:
+      column: username
+      table:
+        name: user_subjects
+        schema: public
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - bio
+    - blocked
+    - created_at
+    - email
+    - fullname
+    - grade
+    - profile_picture
+    - school
+    - updated_at
+    - username
+    filter:
+      _and:
+      - role:
+          _eq: STUDENT
+    limit: 10
+  role: PLATFORM_MODERATOR
+- permission:
+    allow_aggregations: true
+    columns:
+    - bio
+    - created_at
+    - email
+    - fullname
+    - grade
+    - profile_picture
+    - school
+    - updated_at
+    - username
+    filter:
+      _and:
+      - role:
+          _eq: STUDENT
+      - blocked:
+          _neq: true
+    limit: 10
+  role: STUDENT
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - bio
+    - fullname
+    - grade
+    - profile_picture
+    - school
+    filter:
+      _and:
+      - username:
+          _eq: X-Hasura-Username
+      - blocked:
+          _neq: true
+    set:
+      username: x-hasura-Username
+  role: STUDENT

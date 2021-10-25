@@ -1,0 +1,15 @@
+mutation ACCEPT_REPORT($username: String!, $id: uuid!) {
+  update_note_reports_by_pk(
+    pk_columns: { note_id: $id, username: $username }
+    _set: { accepted: true, rejected: false }
+  ) {
+    rejected
+    accepted
+  }
+  note: update_notes_by_pk(
+    pk_columns: { id: $id }
+    _set: { deleted_at: "now()" }
+  ) {
+    id
+  }
+}

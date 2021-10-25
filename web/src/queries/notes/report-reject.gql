@@ -1,0 +1,9 @@
+mutation REJECT_REPORT($username: String!, $id: uuid!) {
+  update_note_reports_by_pk(
+    pk_columns: { note_id: $id, username: $username }
+    _set: { accepted: false, rejected: true }
+  ) {
+    rejected
+    accepted
+  }
+}

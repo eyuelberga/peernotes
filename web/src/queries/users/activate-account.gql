@@ -1,0 +1,20 @@
+mutation ACTIVATE_ACCOUNT(
+  $school: String!
+  $grade_level: Int!
+  $fullname: String!
+  $username: String!
+  $subjects: [user_subjects_insert_input!]!
+) {
+  update_users(
+    _set: { school: $school, grade: $grade_level, fullname: $fullname }
+    where: { username: { _eq: $username } }
+  ) {
+    affected_rows
+  }
+  insert_user_subjects(
+    objects: $subjects
+    on_conflict: { constraint: user_subjects_pkey, update_columns: [subject] }
+  ) {
+    affected_rows
+  }
+}

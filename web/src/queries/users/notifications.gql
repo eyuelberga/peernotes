@@ -1,0 +1,31 @@
+query GET_NOTIFICATIONS(
+  $username: String!
+  $cursor: timestamptz = "now()"
+  $limit: Int = 10
+) {
+  notifications(
+    where: {
+      _and: [
+        { to: { _eq: $username } }
+        { created_at: { _lt: $cursor } }
+        { seen: { _neq: true } }
+      ]
+    }
+    limit: $limit
+    order_by: { created_at: desc }
+  ) {
+    subject
+    body
+    id
+    seen
+    to
+    updatedAt: created_at
+  }
+  total: notifications_aggregate(
+    where: { _and: [{ to: { _eq: $username } }, { seen: { _neq: true } }] }
+  ) {
+    aggregate {
+      count
+    }
+  }
+}

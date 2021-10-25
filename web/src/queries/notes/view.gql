@@ -1,0 +1,6 @@
+mutation VIEW_NOTE($id: uuid!) {
+  insert_note_views_one(object: { note_id: $id }) {
+    note_id
+    username
+  }
+}

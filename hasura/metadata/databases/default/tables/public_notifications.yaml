@@ -1,0 +1,59 @@
+table:
+  name: notifications
+  schema: public
+object_relationships:
+- name: user
+  using:
+    foreign_key_constraint_on: to
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - id
+    - subject
+    - body
+    - to
+    - seen
+    - created_at
+    - updated_at
+    filter:
+      to:
+        _eq: X-Hasura-Username
+    limit: 10
+  role: PLATFORM_MODERATOR
+- permission:
+    allow_aggregations: true
+    columns:
+    - seen
+    - body
+    - subject
+    - to
+    - created_at
+    - updated_at
+    - id
+    filter:
+      to:
+        _eq: X-Hasura-Username
+    limit: 10
+  role: STUDENT
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - seen
+    filter:
+      to:
+        _eq: X-Hasura-Username
+    set:
+      seen: "true"
+  role: PLATFORM_MODERATOR
+- permission:
+    check: null
+    columns:
+    - seen
+    filter:
+      to:
+        _eq: X-Hasura-Username
+    set:
+      seen: "true"
+  role: STUDENT

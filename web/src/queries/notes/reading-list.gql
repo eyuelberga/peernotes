@@ -1,0 +1,58 @@
+query GET_READING_LIST_BY_USER(
+  $username: String
+  $limit: Int = 1
+  $cursor: timestamptz = "now()"
+) {
+  notes: note_bookmarks(
+    where: {
+      _and: [{ username: { _eq: $username } }, { updated_at: { _lt: $cursor } }]
+    }
+    order_by: { updated_at: desc }
+    limit: $limit
+  ) {
+    bookmarkedAt: updated_at
+    note {
+      bookmarks: bookmarks_aggregate {
+        aggregate {
+          count(distinct: true, columns: username)
+        }
+      }
+      id
+      title
+      description
+      updatedAt: updated_at
+      likes: likes_aggregate {
+        aggregate {
+          count(columns: note_id, distinct: true)
+        }
+      }
+      views: views_aggregate {
+        aggregate {
+          count(columns: note_id, distinct: true)
+        }
+      }
+      topic {
+        name
+        textbook {
+          name
+          subject
+          gradeLevel: grade
+        }
+      }
+      createdBy: user {
+        grade
+        username
+        fullname
+        profilePicture: profile_picture
+        school
+      }
+    }
+  }
+  total: note_bookmarks_aggregate(
+    where: { _and: [{ username: { _eq: $username } }] }
+  ) {
+    aggregate {
+      count
+    }
+  }
+}

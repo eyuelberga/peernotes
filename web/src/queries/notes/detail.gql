@@ -1,0 +1,49 @@
+query GET_NOTE($id: uuid!, $username: String!) {
+  note: notes_by_pk(id: $id) {
+    id
+    title
+    content
+    description
+    published
+    updatedAt: updated_at
+    topic {
+      id
+      name
+      textbook {
+        gradeLevel: grade
+        name
+        subject
+      }
+    }
+    createdBy: user {
+      fullname
+      username
+      school
+      profilePicture: profile_picture
+    }
+    likes: likes_aggregate {
+      aggregate {
+        count
+      }
+    }
+    views: views_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+  isLiked: note_likes_aggregate(
+    where: { _and: { username: { _eq: $username }, note_id: { _eq: $id } } }
+  ) {
+    aggregate {
+      count
+    }
+  }
+  isBookmarked: note_bookmarks_aggregate(
+    where: { _and: { username: { _eq: $username }, note_id: { _eq: $id } } }
+  ) {
+    aggregate {
+      count
+    }
+  }
+}

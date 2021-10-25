@@ -1,0 +1,25 @@
+query GET_NOTE_FOR_UPDATE($id: uuid!) {
+  note: notes_by_pk(id: $id) {
+    id
+    title
+    content
+    description
+    published
+    updatedAt: updated_at
+    topic {
+      id
+      name
+      textbook {
+        gradeLevel: grade
+        name
+        subject
+      }
+    }
+    createdBy: user {
+      fullname
+      username
+      school
+      profilePicture: profile_picture
+    }
+  }
+}

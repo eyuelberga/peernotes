@@ -1,0 +1,5 @@
+mutation MARK_AS_READ($id: uuid!) {
+  update_notifications_by_pk(pk_columns: { id: $id }, _set: { seen: true }) {
+    seen
+  }
+}

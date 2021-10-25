@@ -1,0 +1,7 @@
+query SEARCH_SCHOOL($query: String!) {
+  schools(limit: 5, where: { _and: [{ name: { _ilike: $query } }] }) {
+    name
+    location
+    picture
+  }
+}

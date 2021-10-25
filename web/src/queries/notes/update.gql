@@ -1,0 +1,22 @@
+mutation UPDATE_NOTE(
+  $id: uuid!
+  $title: String!
+  $description: String
+  $topic_id: uuid!
+  $content: String!
+  $published: Boolean
+) {
+  note: update_notes_by_pk(
+    pk_columns: { id: $id }
+    _set: {
+      content: $content
+      description: $description
+      title: $title
+      topic_id: $topic_id
+      published: $published
+    }
+  ) {
+    id
+    published
+  }
+}

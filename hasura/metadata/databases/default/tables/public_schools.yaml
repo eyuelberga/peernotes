@@ -1,0 +1,26 @@
+table:
+  name: schools
+  schema: public
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - name
+    - picture
+    - location
+    - created_at
+    - updated_at
+    filter: {}
+    limit: 10
+  role: PLATFORM_MODERATOR
+- permission:
+    allow_aggregations: true
+    columns:
+    - location
+    - picture
+    - name
+    - created_at
+    - updated_at
+    filter: {}
+    limit: 10
+  role: STUDENT

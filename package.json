@@ -1,0 +1,34 @@
+{
+  "name": "peer-notes",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "docker-compose -f ./docker-compose.yml -p peernotes up",
+    "start:test": "docker-compose -f ./docker-compose.test.yml -p peernotes-test up",
+    "commit": "git-cz",
+    "format": "prettier --write **/*.{ts,tsx,js,jsx}",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "db:note:clean": "node ./cypress/scripts/note-clean.js",
+    "db:note:engagement:clean": "node ./cypress/scripts/note-engagement-clean.js",
+    "db:activation:clean": "node ./cypress/scripts/activation-clean.js",
+    "db:note:resetreport": "node ./cypress/scripts/note-reset-report.js"
+  },
+  "devDependencies": {
+    "@cypress/code-coverage": "^3.9.11",
+    "@commitlint/cli": "11.0.0",
+    "@commitlint/config-conventional": "11.0.0",
+    "commitizen": "4.2.3",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^7.0.2",
+    "lint-staged": "10.5.3",
+    "prettier": "2.2.1",
+    "cypress": "^8.3.1",
+    "cypress-file-upload": "^5.0.8"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}

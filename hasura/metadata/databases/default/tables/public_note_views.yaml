@@ -1,0 +1,43 @@
+table:
+  name: note_views
+  schema: public
+object_relationships:
+- name: note
+  using:
+    foreign_key_constraint_on: note_id
+- name: user
+  using:
+    foreign_key_constraint_on: username
+insert_permissions:
+- permission:
+    backend_only: false
+    check:
+      note:
+        published:
+          _eq: true
+    columns:
+    - note_id
+    set:
+      username: x-hasura-Username
+  role: STUDENT
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - username
+    - note_id
+    - created_at
+    - updated_at
+    filter: {}
+    limit: 10
+  role: PLATFORM_MODERATOR
+- permission:
+    allow_aggregations: true
+    columns:
+    - username
+    - note_id
+    - created_at
+    - updated_at
+    filter: {}
+    limit: 10
+  role: STUDENT

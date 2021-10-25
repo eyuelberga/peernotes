@@ -1,0 +1,34 @@
+table:
+  name: textbooks
+  schema: public
+array_relationships:
+- name: topics
+  using:
+    foreign_key_constraint_on:
+      column: textbook_name
+      table:
+        name: topics
+        schema: public
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - name
+    - subject
+    - grade
+    - created_at
+    - updated_at
+    filter: {}
+    limit: 10
+  role: PLATFORM_MODERATOR
+- permission:
+    allow_aggregations: true
+    columns:
+    - grade
+    - name
+    - subject
+    - created_at
+    - updated_at
+    filter: {}
+    limit: 10
+  role: STUDENT

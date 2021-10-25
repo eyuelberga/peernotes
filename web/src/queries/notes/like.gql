@@ -1,0 +1,6 @@
+mutation LIKE_NOTE($id: uuid!) {
+  insert_note_likes_one(object: { note_id: $id }) {
+    note_id
+    username
+  }
+}

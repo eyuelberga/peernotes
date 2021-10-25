@@ -1,0 +1,83 @@
+table:
+  name: note_reports
+  schema: public
+object_relationships:
+- name: last_updated_user
+  using:
+    foreign_key_constraint_on: last_updated_by
+- name: note
+  using:
+    foreign_key_constraint_on: note_id
+- name: user
+  using:
+    foreign_key_constraint_on: username
+insert_permissions:
+- permission:
+    backend_only: false
+    check:
+      note:
+        published:
+          _eq: true
+    columns:
+    - description
+    - note_id
+    - type
+    set:
+      last_updated_by: x-hasura-Username
+      username: x-hasura-Username
+  role: STUDENT
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - username
+    - note_id
+    - type
+    - description
+    - accepted
+    - rejected
+    - last_updated_by
+    - created_at
+    - updated_at
+    filter: {}
+    limit: 10
+  role: PLATFORM_MODERATOR
+- permission:
+    allow_aggregations: true
+    columns:
+    - accepted
+    - created_at
+    - description
+    - note_id
+    - rejected
+    - type
+    - updated_at
+    - username
+    filter:
+      username:
+        _eq: X-Hasura-Username
+    limit: 10
+  role: STUDENT
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - accepted
+    - rejected
+    filter: {}
+    set:
+      last_updated_by: x-hasura-Username
+  role: PLATFORM_MODERATOR
+- permission:
+    check: null
+    columns:
+    - description
+    - type
+    filter:
+      note:
+        published:
+          _eq: true
+    set:
+      last_updated_by: x-hasura-Username
+      username: x-hasura-Username
+  role: STUDENT

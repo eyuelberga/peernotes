@@ -1,0 +1,38 @@
+table:
+  name: topics
+  schema: public
+object_relationships:
+- name: textbook
+  using:
+    foreign_key_constraint_on: textbook_name
+array_relationships:
+- name: notes
+  using:
+    foreign_key_constraint_on:
+      column: topic_id
+      table:
+        name: notes
+        schema: public
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - name
+    - textbook_name
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+    limit: 10
+  role: PLATFORM_MODERATOR
+- permission:
+    allow_aggregations: true
+    columns:
+    - id
+    - name
+    - textbook_name
+    - created_at
+    - updated_at
+    filter: {}
+    limit: 10
+  role: STUDENT

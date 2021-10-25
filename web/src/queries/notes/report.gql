@@ -1,0 +1,11 @@
+mutation REPORT_NOTE($id: uuid!, $type: String!, $description: String!) {
+  insert_note_reports_one(
+    object: { note_id: $id, description: $description, type: $type }
+    on_conflict: {
+      constraint: note_reports_pkey
+      update_columns: [type, description]
+    }
+  ) {
+    type
+  }
+}

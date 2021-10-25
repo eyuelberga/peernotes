@@ -1,0 +1,6 @@
+mutation ADD_TO_READING_LIST($id: uuid!) {
+  insert_note_bookmarks_one(object: { note_id: $id }) {
+    note_id
+    username
+  }
+}

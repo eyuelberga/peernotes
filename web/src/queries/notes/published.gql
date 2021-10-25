@@ -1,0 +1,61 @@
+query GET_PUBLISHED_NOTES_BY_USER(
+  $username: String
+  $limit: Int = 1
+  $cursor: timestamptz = "now()"
+) {
+  notes(
+    where: {
+      _and: [
+        { created_by: { _eq: $username } }
+        { published: { _eq: true } }
+        { updated_at: { _lt: $cursor } }
+      ]
+    }
+    order_by: { updated_at: desc }
+    limit: $limit
+  ) {
+    bookmarks: bookmarks_aggregate {
+      aggregate {
+        count(distinct: true, columns: username)
+      }
+    }
+    id
+    title
+    description
+    updatedAt: updated_at
+    likes: likes_aggregate {
+      aggregate {
+        count(columns: note_id, distinct: true)
+      }
+    }
+    views: views_aggregate {
+      aggregate {
+        count(columns: note_id, distinct: true)
+      }
+    }
+    topic {
+      name
+      textbook {
+        name
+        subject
+        gradeLevel: grade
+      }
+    }
+    createdBy: user {
+      grade
+      username
+      fullname
+      profilePicture: profile_picture
+      school
+    }
+  }
+  total: notes_aggregate(
+    where: {
+      _and: [{ created_by: { _eq: $username } }, { published: { _eq: true } }]
+    }
+  ) {
+    aggregate {
+      count
+    }
+  }
+}

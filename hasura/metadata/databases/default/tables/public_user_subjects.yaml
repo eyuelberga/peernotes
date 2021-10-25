@@ -1,0 +1,57 @@
+table:
+  name: user_subjects
+  schema: public
+object_relationships:
+- name: user
+  using:
+    foreign_key_constraint_on: username
+insert_permissions:
+- permission:
+    backend_only: false
+    check:
+      username:
+        _eq: X-Hasura-Username
+    columns:
+    - subject
+    set:
+      username: x-hasura-Username
+  role: STUDENT
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - username
+    - subject
+    - created_at
+    - updated_at
+    filter: {}
+    limit: 10
+  role: PLATFORM_MODERATOR
+- permission:
+    allow_aggregations: true
+    columns:
+    - subject
+    - username
+    - created_at
+    - updated_at
+    filter:
+      _and:
+      - user:
+          role:
+            _eq: STUDENT
+      - user:
+          blocked:
+            _neq: true
+    limit: 10
+  role: STUDENT
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - subject
+    filter:
+      username:
+        _eq: X-Hasura-Username
+    set:
+      username: x-hasura-Username
+  role: STUDENT

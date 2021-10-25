@@ -1,0 +1,20 @@
+query STUDENT_PROFILE($username: String!) {
+  student: users(where: { username: { _eq: $username } }, limit: 1) {
+    fullname
+    username
+    email
+    gradeLevel: grade
+    profilePicture: profile_picture
+    school
+    bio
+
+    subjects {
+      subject
+    }
+    totalPublishedNotes: notes_aggregate(where: { published: { _eq: true } }) {
+      aggregate {
+        count(distinct: true)
+      }
+    }
+  }
+}

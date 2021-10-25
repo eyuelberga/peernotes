@@ -1,0 +1,78 @@
+query GET_NOTE_REPORTS($limit: Int = 1, $cursor: timestamptz = "now()") {
+  reports: note_reports(
+    where: {
+      _and: [
+        { accepted: { _neq: true } }
+        { rejected: { _neq: true } }
+        { updated_at: { _lt: $cursor } }
+      ]
+    }
+    limit: $limit
+    order_by: { updated_at: desc }
+  ) {
+    note {
+      content
+      id
+      title
+      description
+      updatedAt: updated_at
+      likes: likes_aggregate {
+        aggregate {
+          count(columns: note_id, distinct: true)
+        }
+      }
+      views: views_aggregate {
+        aggregate {
+          count(columns: note_id, distinct: true)
+        }
+      }
+      topic {
+        name
+        textbook {
+          name
+          subject
+          gradeLevel: grade
+        }
+      }
+      createdBy: user {
+        grade
+        username
+        fullname
+        profilePicture: profile_picture
+        school
+      }
+    }
+    reportDescription: description
+    updated_at
+    reportType: type
+    username
+  }
+  total: note_reports_aggregate {
+    aggregate {
+      count
+    }
+  }
+  totalPending: note_reports_aggregate(
+    where: {
+      _and: [{ accepted: { _neq: true } }, { rejected: { _neq: true } }]
+    }
+  ) {
+    aggregate {
+      count
+    }
+  }
+  totalAccepted: note_reports_aggregate(
+    where: { _and: [{ accepted: { _eq: true } }, { rejected: { _eq: false } }] }
+  ) {
+    aggregate {
+      count
+    }
+  }
+  totalRejected: note_reports_aggregate(
+    where: { _and: [{ accepted: { _eq: false } }, { rejected: { _eq: true } }] }
+  ) {
+    aggregate {
+      count
+    }
+  }
+}

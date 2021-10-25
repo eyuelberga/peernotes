@@ -1,0 +1,17 @@
+mutation CREATE_NOTE(
+  $title: String!
+  $description: String
+  $topic_id: uuid!
+  $content: String!
+) {
+  note: insert_notes_one(
+    object: {
+      content: $content
+      description: $description
+      topic_id: $topic_id
+      title: $title
+    }
+  ) {
+    id
+  }
+}

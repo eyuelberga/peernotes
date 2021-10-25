@@ -1,0 +1,15 @@
+query GET_TOPICS($subject: String!, $gradeLevel: Int!) {
+  topics(
+    where: {
+      textbook: { grade: { _eq: $gradeLevel }, subject: { _eq: $subject } }
+    }
+  ) {
+    id
+    topic: name
+    textbook {
+      name
+      subject
+      gradeLevel: grade
+    }
+  }
+}

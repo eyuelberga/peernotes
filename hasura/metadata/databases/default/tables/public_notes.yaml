@@ -1,0 +1,149 @@
+table:
+  name: notes
+  schema: public
+object_relationships:
+- name: topic
+  using:
+    foreign_key_constraint_on: topic_id
+- name: user
+  using:
+    foreign_key_constraint_on: created_by
+array_relationships:
+- name: bookmarks
+  using:
+    foreign_key_constraint_on:
+      column: note_id
+      table:
+        name: note_bookmarks
+        schema: public
+- name: likes
+  using:
+    foreign_key_constraint_on:
+      column: note_id
+      table:
+        name: note_likes
+        schema: public
+- name: reports
+  using:
+    foreign_key_constraint_on:
+      column: note_id
+      table:
+        name: note_reports
+        schema: public
+- name: views
+  using:
+    foreign_key_constraint_on:
+      column: note_id
+      table:
+        name: note_views
+        schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - content
+    - description
+    - title
+    - topic_id
+    set:
+      created_by: x-hasura-Username
+  role: STUDENT
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - published
+    - engagement_score
+    - content
+    - created_by
+    - description
+    - title
+    - created_at
+    - deleted_at
+    - updated_at
+    - id
+    - topic_id
+    filter:
+      published:
+        _eq: true
+    limit: 10
+  role: PLATFORM_MODERATOR
+- permission:
+    allow_aggregations: true
+    columns:
+    - published
+    - engagement_score
+    - content
+    - created_by
+    - description
+    - title
+    - created_at
+    - deleted_at
+    - updated_at
+    - id
+    - topic_id
+    filter:
+      _and:
+      - deleted_at:
+          _is_null: true
+      - _or:
+        - created_by:
+            _eq: X-Hasura-Username
+        - published:
+            _eq: true
+    limit: 10
+  role: STUDENT
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - deleted_at
+    filter:
+      published:
+        _eq: true
+  role: PLATFORM_MODERATOR
+- permission:
+    check: null
+    columns:
+    - content
+    - description
+    - published
+    - title
+    - topic_id
+    filter:
+      _and:
+      - deleted_at:
+          _is_null: true
+      - created_by:
+          _eq: X-Hasura-Username
+    set:
+      created_by: x-hasura-Username
+  role: STUDENT
+delete_permissions:
+- permission:
+    filter:
+      _and:
+      - deleted_at:
+          _is_null: true
+      - created_by:
+          _eq: X-Hasura-Username
+  role: STUDENT
+event_triggers:
+- definition:
+    delete:
+      columns: "*"
+    enable_manual: false
+    insert:
+      columns: "*"
+    update:
+      columns:
+      - published
+      - deleted_at
+      - updated_at
+  name: algolia
+  retry_conf:
+    interval_sec: 10
+    num_retries: 0
+    timeout_sec: 60
+  webhook_from_env: ALGOLIA_WEBHOOK_URL

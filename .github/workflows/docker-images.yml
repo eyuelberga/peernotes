@@ -1,0 +1,26 @@
+name: Docker Image CI
+on:
+  push:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: docker login
+        env:
+          DOCKER_USER: ${{secrets.DOCKER_USERNAME}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+
+      - name: Build the Docker images
+        run: docker build . --file web/Dockerfile --tag eyuelberga/peernotes-web:$(date +%s)
+        run: docker build . --file web/Dockerfile --build-arg "ENV=TEST" --tag eyuelberga/peernotes-web-test:$(date +%s)
+        run: docker build . --file algolia-webhook/Dockerfile --build-arg "ENV=TEST" --tag eyuelberga/peernotes-algolia-webhook:$(date +%s)
+
+      - name: Push to docker hub
+        run: docker push eyuelberga/peernotes-web
+        run: docker push eyuelberga/peernotes-web-test
+        run: docker push eyuelberga/peernotes-algolia-webhook

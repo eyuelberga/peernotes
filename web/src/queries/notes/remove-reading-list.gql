@@ -1,0 +1,5 @@
+mutation REMOVE_FROM_READING_LIST($id: uuid!, $username: String!) {
+  note: delete_note_bookmarks_by_pk(note_id: $id, username: $username) {
+    id: note_id
+  }
+}
