@@ -12,15 +12,18 @@ jobs:
         with:
           node-version: 14.x
       - name: Build web app
+        env:
+          ENV_VARS: ${{ secrets.NETLIFY_ENV_VARS }}
         run: |
           cd web
           yarn
-          yarn build
+          yarn build:netlify
+          echo $ENV_VARS >> ./build/env-config.js
       - name: Deploy to netlify
         uses: netlify/actions/cli@master
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         with:
-          args: deploy --dir=build --prod
+          args: deploy --dir=web/build --prod
           secrets: '["NETLIFY_AUTH_TOKEN", "NETLIFY_SITE_ID"]'

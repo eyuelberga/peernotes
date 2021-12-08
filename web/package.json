@@ -6,6 +6,7 @@
     "start": "yarn env:gen && react-scripts start",
     "start:test": "yarn env:gen && react-scripts -r @cypress/instrument-cra start",
     "build": "sh -ac '. ./.env; react-scripts build'",
+    "build:netlify": "react-scripts build",
     "build:test": "sh -ac '. ./.env; CYPRESS_INSTRUMENT_PRODUCTION=true react-scripts -r @cypress/instrument-cra build'",
     "env:gen": "chmod +x ./env.sh && ./env.sh && cp env-config.js ./public/",
     "test": "react-scripts test",
