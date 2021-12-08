@@ -17,6 +17,7 @@ jobs:
         run: |
           cd web
           yarn
+          echo SKIP_PREFLIGHT_CHECK=true >> ./.env
           yarn build:netlify
           echo $ENV_VARS >> ./build/env-config.js
       - name: Deploy to netlify
