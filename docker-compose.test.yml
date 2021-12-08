@@ -8,7 +8,7 @@ services:
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   algolia-webhook:
-    image: eyuelberga/peernotes-algolia-webhook:latest
+    image: eyuelberga/peernotes-algolia-webhook:v0.0.1
     ports:
       - '3001:3000'
     environment:
@@ -38,7 +38,7 @@ services:
       HASURA_GRAPHQL_JWT_SECRET: ${HASURA_GRAPHQL_JWT_SECRET}
       ALGOLIA_WEBHOOK_URL: 'http://172.17.0.1:3001/'
   web:
-    image: eyuelberga/peernotes-web-test:latest
+    image: eyuelberga/peernotes-web-test:v0.0.1
     ports:
       - '3000:80'
     depends_on:

@@ -15,10 +15,14 @@ const graphQLClient = new GraphQLClient(
 const main = async () => {
   try {
     const clean = gql`
-      mutation RESET($username: String!) {
-        update_users(
-          where: { username: { _eq: $username } }
-          _set: { grade: null }
+      mutation RESET($username: String!, $id: String!, $email: String!) {
+        delete_users(where: { username: { _eq: $username } }) {
+          affected_rows
+        }
+        insert_users(
+          objects: [
+            { username: $username, id: $id, email: $email, role: "STUDENT" }
+          ]
         ) {
           affected_rows
         }
@@ -29,6 +33,8 @@ const main = async () => {
     `;
     await graphQLClient.request(clean, {
       username: 'testuser3',
+      id: 'auth0|6141d19d81fe740069136ba3',
+      email: 'testuser3@peerlearn.com',
     });
     process.exit(0);
   } catch (e) {

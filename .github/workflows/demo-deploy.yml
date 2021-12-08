@@ -1,0 +1,35 @@
+name: Deploy Demo Site
+on:
+  push:
+    branches: main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+      - name: Install Hasura CLI
+        run: curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
+
+      - name: Apply migrations to hasura cloud
+        env:
+          ENDPOINT: ${{secrets.HASURA_GRAPHQL_ENDPOINT}}
+          SECRET: ${{secrets.HASURA_GRAPHQL_ADMIN_SECRET}}
+        run: cd hasura && hasura migrate apply --admin-secret $SECRET --endpoint $ENDPOINT
+
+      - name: Build web app
+        run: |
+          cd web
+          yarn
+          yarn build
+      - name: Deploy to netlify
+        uses: netlify/actions/cli@master
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        with:
+          args: deploy --dir=build --prod
+          secrets: '["NETLIFY_AUTH_TOKEN", "NETLIFY_SITE_ID"]'
