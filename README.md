@@ -15,6 +15,13 @@ Peer Notes is a web application for High School Students to share and access sch
 
 The project was built using React for the frontend web app, Auth0 for managing user authentication, Hasura GraphQL Engine, Algolia for search and also Cloudnary for image upload.
 
+## Preview
+![Landing](assets/peernotes_landing.png)
+
+![Home](assets/peernotes_home.png)
+
+![Create](assets/peernotes_create.png)
+
 ## Getting Started
 
 To quickly run the project, use docker-compose. But before that, you need to setup some environment variables which are listed below:
